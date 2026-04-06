@@ -1,0 +1,14 @@
+[
+    {"subject": "Team meeting at 3pm today", "sender": "manager@company.com", "body": "Hi team, please join our weekly sync at 3pm in conference room B. Agenda: project updates and Q4 planning."},
+    {"subject": "Project deadline reminder", "sender": "lead@company.com", "body": "Just a reminder that the project deliverables are due this Friday. Please make sure everything is submitted on time."},
+    {"subject": "Your leave request has been approved", "sender": "hr@company.com", "body": "Your leave request for December 25-27 has been approved. Please ensure your work is covered before you leave."},
+    {"subject": "New company policy update", "sender": "hr@company.com", "body": "Please review the updated work from home policy attached. The new policy takes effect from next Monday."},
+    {"subject": "Client presentation tomorrow", "sender": "director@company.com", "body": "Reminder that we have an important client presentation tomorrow at 10am. Please review the slides and be prepared."},
+    {"subject": "Invoice #1234 is due", "sender": "accounts@company.com", "body": "Invoice #1234 for $5,000 is due for payment by end of this week. Please process it at your earliest convenience."},
+    {"subject": "Performance review scheduled", "sender": "hr@company.com", "body": "Your annual performance review has been scheduled for next Tuesday at 2pm. Please prepare a self assessment beforehand."},
+    {"subject": "Server maintenance tonight", "sender": "it@company.com", "body": "The servers will be down for maintenance tonight from 11pm to 2am. Please save all your work before then."},
+    {"subject": "Welcome to the team!", "sender": "hr@company.com", "body": "Please join me in welcoming John Smith who is joining our team as a Senior Developer starting Monday."},
+    {"subject": "Quarterly report due next week", "sender": "cfo@company.com", "body": "All department heads please submit your quarterly reports by next Friday for the board meeting."},
+    {"subject": "Training session on Friday", "sender": "learning@company.com", "body": "There will be a mandatory training session on data security this Friday from 2-4pm. Please mark your calendars."},
+    {"subject": "Office will be closed on Monday", "sender": "admin@company.com", "body": "Please note that the office will be closed on Monday for the public holiday. Normal operations resume Tuesday."}
+]

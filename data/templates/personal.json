@@ -1,0 +1,14 @@
+[
+    {"subject": "Weekend plans?", "sender": "friend@gmail.com", "body": "Hey! Are you free this weekend? Was thinking we could go hiking or catch a movie. Let me know!"},
+    {"subject": "Happy Birthday!", "sender": "family@gmail.com", "body": "Wishing you a wonderful birthday! Hope you have an amazing day filled with joy and happiness. Love you!"},
+    {"subject": "Dinner tonight?", "sender": "partner@gmail.com", "body": "Hey, are you coming home for dinner tonight? I am making your favourite pasta. Let me know by 5pm!"},
+    {"subject": "Reunion next month", "sender": "classmate@gmail.com", "body": "Hey! Our school reunion is next month on the 15th. It would be great to catch up with everyone. Are you coming?"},
+    {"subject": "Check out this article", "sender": "colleague@gmail.com", "body": "Hey I thought you might find this article interesting. It is about the latest trends in AI. Have a read when you get a chance!"},
+    {"subject": "Thanks for your help!", "sender": "neighbor@gmail.com", "body": "Just wanted to say a big thank you for helping me move last weekend. I really appreciate it. Let me buy you dinner sometime!"},
+    {"subject": "Movie night Saturday?", "sender": "friend@gmail.com", "body": "Hey! A bunch of us are getting together for a movie night on Saturday. Would love for you to join us. Starting at 7pm!"},
+    {"subject": "Your Amazon order has shipped", "sender": "orders@amazon.com", "body": "Great news! Your order has been shipped and will arrive by Thursday. Track your package using the link below."},
+    {"subject": "Gym buddy needed!", "sender": "friend@gmail.com", "body": "Hey I just signed up at the new gym downtown. Looking for a workout buddy. Interested? They have a great deal for pairs!"},
+    {"subject": "Recipe I promised you", "sender": "mom@gmail.com", "body": "Here is the chocolate cake recipe you asked for! Let me know how it turns out. Remember to use dark chocolate for best results."},
+    {"subject": "Congratulations on your promotion!", "sender": "friend@gmail.com", "body": "Just heard the amazing news about your promotion! You totally deserve it. We should celebrate this weekend!"},
+    {"subject": "Can you dog sit next week?", "sender": "neighbor@gmail.com", "body": "Hey, I am going on a short trip next week and was wondering if you could look after Max for a few days. He is very well behaved!"}
+]

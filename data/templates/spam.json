@@ -1,0 +1,14 @@
+[
+    {"subject": "You have won $1,000,000!", "sender": "winner@lottery.com", "body": "Congratulations! You have been selected as our lucky winner. Click here to claim your prize immediately!"},
+    {"subject": "Urgent: Your account has been suspended", "sender": "security@fakebank.com", "body": "Your bank account has been suspended due to suspicious activity. Verify your identity immediately to restore access."},
+    {"subject": "Free iPhone 15 - Limited offer!", "sender": "promo@deals.com", "body": "You have been selected for a FREE iPhone 15! This offer expires in 24 hours. Click now to claim!"},
+    {"subject": "Your package could not be delivered", "sender": "delivery@fakecourier.com", "body": "We attempted to deliver your package but failed. Click here to reschedule your delivery and pay a small fee."},
+    {"subject": "Exclusive investment opportunity", "sender": "invest@richquick.com", "body": "Double your money in 30 days! Our exclusive investment plan guarantees 200% returns. Limited slots available!"},
+    {"subject": "Your Netflix account is on hold", "sender": "billing@netflix-support.com", "body": "We could not process your payment. Update your billing information immediately to avoid losing access."},
+    {"subject": "You have been selected for a survey", "sender": "survey@rewards.com", "body": "Complete this 2 minute survey and earn $500 in gift cards. Limited time offer!"},
+    {"subject": "Lose 20kg in 2 weeks!", "sender": "health@miracle-diet.com", "body": "Doctors hate this trick! Lose 20kg in just 2 weeks with our miracle supplement. Order now!"},
+    {"subject": "Your computer has a virus!", "sender": "alert@techsupport.com", "body": "We detected 5 viruses on your computer. Call our toll free number immediately to fix this issue!"},
+    {"subject": "Cheap medications online", "sender": "pharma@discount-meds.com", "body": "Buy prescription medications without a prescription! Huge discounts available. Order now and save 80%!"},
+    {"subject": "You owe back taxes", "sender": "irs@tax-alert.com", "body": "You owe $3,500 in back taxes. Failure to pay immediately will result in arrest. Call now to settle!"},
+    {"subject": "Work from home earn $5000/week", "sender": "jobs@easywork.com", "body": "Earn $5000 per week working from home just 2 hours a day! No experience needed. Apply now!"}
+]
