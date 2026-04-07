@@ -1,6 +1,6 @@
 # reward/components/correctness.py
 
-from env.models.actions import ActionResult
+from env.models import ActionResult
 from env.config import (
     REWARD_CORRECT_ACTION,
     REWARD_WRONG_ACTION,

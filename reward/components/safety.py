@@ -1,7 +1,7 @@
 # reward/components/safety.py
 
-from env.models.actions import ActionResult, ActionType
-from env.models.state import Email
+from env.models import ActionResult, ActionType
+from env.models import Email
 
 
 class SafetyReward:

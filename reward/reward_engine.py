@@ -1,8 +1,8 @@
 # reward/engine.py
 
 from typing import Dict, Any
-from env.models.actions import ActionResult, ActionType
-from env.models.state import Email
+from env.models import ActionResult, ActionType
+from env.models import Email
 from reward.components.correctness import CorrectnessReward
 from reward.components.efficiency import EfficiencyReward
 from reward.components.safety import SafetyReward
