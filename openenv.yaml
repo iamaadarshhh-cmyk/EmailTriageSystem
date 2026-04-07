@@ -1,0 +1,129 @@
+# openenv.yaml
+
+name: email-triage-openenv
+version: 1.0.0
+description: >
+  A production-grade reinforcement learning environment for training
+  and benchmarking AI agents on real-world email triage tasks.
+  Implements the full OpenEnv specification with typed Pydantic models,
+  programmatic graders, multi-component rewards, and reproducible baselines.
+
+author: your-name
+license: MIT
+
+# ─── Environment ────────────────────────────────────────────
+environment:
+  class: openenv_wrapper.EmailTriageEnv
+  entry_point: openenv_wrapper:EmailTriageEnv
+
+# ─── Tasks ──────────────────────────────────────────────────
+tasks:
+  - id: task1_easy
+    name: Basic Inbox Triage
+    difficulty: easy
+    n_emails: 5
+    max_steps: 20
+    pass_threshold: 0.70
+    description: >
+      Classify and handle 5 clear emails.
+      Tests fundamental triage capabilities.
+
+  - id: task2_medium
+    name: Mixed Priority Inbox
+    difficulty: medium
+    n_emails: 7
+    max_steps: 35
+    pass_threshold: 0.70
+    description: >
+      Handle 7 emails requiring contextual reasoning,
+      correct team routing and security awareness.
+
+  - id: task3_hard
+    name: High Stakes Escalations
+    difficulty: hard
+    n_emails: 5
+    max_steps: 25
+    pass_threshold: 0.65
+    description: >
+      All emails are high-stakes requiring multi-team
+      escalation and professional reply drafting.
+
+# ─── Observation Space ──────────────────────────────────────
+observation_space:
+  type: Dict
+  fields:
+    inbox_remaining:
+      type: Discrete
+      n: 100
+    emails_processed:
+      type: Discrete
+      n: 100
+    step_count:
+      type: Discrete
+      n: 100
+    session_score:
+      type: Box
+      low: -10.0
+      high: 10.0
+      shape: [1]
+    spam_score:
+      type: Box
+      low: 0.0
+      high: 1.0
+      shape: [1]
+    urgency_score:
+      type: Box
+      low: 0.0
+      high: 1.0
+      shape: [1]
+
+# ─── Action Space ───────────────────────────────────────────
+action_space:
+  type: Discrete
+  n: 8
+  actions:
+    - classify
+    - reply
+    - escalate
+    - archive
+    - flag
+    - delete
+    - skip
+    - mark_spam
+
+# ─── Reward ─────────────────────────────────────────────────
+reward:
+  range: [-1.5, 1.5]
+  components:
+    - name: priority_accuracy
+      weight: 0.30
+    - name: category_accuracy
+      weight: 0.20
+    - name: action_correctness
+      weight: 0.25
+    - name: escalation_routing
+      weight: 0.10
+    - name: reply_quality
+      weight: 0.15
+
+# ─── Server ─────────────────────────────────────────────────
+server:
+  host: 0.0.0.0
+  port: 7860
+  endpoints:
+    reset: POST /reset/{task_id}
+    step: POST /step
+    state: GET /state
+    grade: GET /grade
+    tasks: GET /tasks
+    validate: GET /openenv/validate
+
+# ─── Baseline ───────────────────────────────────────────────
+baseline:
+  script: baseline.py
+  model: llama-3.1-8b-instant
+  provider: groq
+  expected_scores:
+    task1_easy: 0.80
+    task2_medium: 0.72
+    task3_hard: 0.61`

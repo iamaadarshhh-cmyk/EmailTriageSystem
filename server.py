@@ -1,6 +1,5 @@
 # server.py
 
-# server.py
 
 import uuid
 from fastapi import FastAPI, HTTPException
@@ -136,7 +135,6 @@ def step(request: StepRequest, session_id: str):
     current_email = emails[current_index]
     ground_truth = current_email["ground_truth"]
 
-    # ─── Build Action Dict ──────────────────────────────────
     # ─── Build Action Dict ──────────────────────────────────────
     action_dict = {
         "action_type": request.action_type.lower(),
@@ -284,6 +282,31 @@ def validate():
         "tasks": results,
     }
 
+
+# ─── RL MODE (OpenEnv / Gym) ───────────────────────────────
+@app.post("/gym/reset")
+def gym_reset():
+    """Reset Gym-compatible RL environment."""
+    obs, info = gym_env.reset()
+    return {
+        "observation": obs,
+        "info": info,
+        "message": "Gym environment reset"
+    }
+
+
+@app.post("/gym/step")
+def gym_step(action: int):
+    """Step Gym environment."""
+    obs, reward, terminated, truncated, info = gym_env.step(action)
+
+    return {
+        "observation": obs,
+        "reward": reward,
+        "terminated": terminated,
+        "truncated": truncated,
+        "info": info
+    }
 
 # ─── Helpers ────────────────────────────────────────────────
 def _build_observation(session: Dict) -> Dict:

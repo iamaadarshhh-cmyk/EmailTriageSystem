@@ -1,8 +1,8 @@
 # tests/test_env.py
 
 from env.core.environment import EmailTriageEnvironment
-from env.models.actions import Action, ActionType
-from tasks.task_factory import TaskFactory
+from env.models import Action, ActionType
+from tasks.corpus import TaskFactory
 
 
 def test_environment_reset():

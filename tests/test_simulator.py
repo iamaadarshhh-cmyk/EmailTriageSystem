@@ -1,7 +1,7 @@
 # tests/test_simulator.py
 
 from env.simulator import EmailSimulator
-from env.models.state import Email, Inbox
+from env.models import Email, Inbox
 
 
 def test_generate_email():

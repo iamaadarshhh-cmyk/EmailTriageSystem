@@ -1,8 +1,8 @@
 # tests/test_reward.py
 
 from reward.reward_engine import RewardEngine
-from env.models.actions import ActionResult, ActionType
-from env.models.state import Email
+from env.models import ActionResult, ActionType
+from env.models import Email
 from datetime import datetime
 
 
