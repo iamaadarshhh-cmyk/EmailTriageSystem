@@ -10,6 +10,7 @@ from env.models import Action, Email, GroundTruth
 from tasks.corpus import TASKS
 from grader.grader import EpisodeGrader
 
+
 # ─── App ────────────────────────────────────────────────────
 app = FastAPI(
     title="Email Triage OpenEnv",
@@ -62,6 +63,14 @@ def root():
 def health():
     return {"status": "healthy"}
 
+@app.post("/reset")
+def reset_default():
+    """Default reset endpoint required by validator."""
+    
+    # Pick any default task (first one)
+    task_id = list(TASKS.keys())[0]
+    
+    return reset(task_id)
 
 # ─── Reset ──────────────────────────────────────────────────
 @app.post("/reset/{task_id}")
@@ -283,30 +292,7 @@ def validate():
     }
 
 
-# ─── RL MODE (OpenEnv / Gym) ───────────────────────────────
-@app.post("/gym/reset")
-def gym_reset():
-    """Reset Gym-compatible RL environment."""
-    obs, info = gym_env.reset()
-    return {
-        "observation": obs,
-        "info": info,
-        "message": "Gym environment reset"
-    }
 
-
-@app.post("/gym/step")
-def gym_step(action: int):
-    """Step Gym environment."""
-    obs, reward, terminated, truncated, info = gym_env.step(action)
-
-    return {
-        "observation": obs,
-        "reward": reward,
-        "terminated": terminated,
-        "truncated": truncated,
-        "info": info
-    }
 
 # ─── Helpers ────────────────────────────────────────────────
 def _build_observation(session: Dict) -> Dict:
@@ -358,8 +344,10 @@ def _generate_feedback(score: Dict, ground_truth) -> str:
     else:
         return "❌ Incorrect action for this email."
 
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=7860)
 
 # ─── Run ────────────────────────────────────────────────────
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+    main()
