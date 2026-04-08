@@ -64,11 +64,11 @@
   },
   {
     "task_id": "task2_medium",
-    "final_score": 0.625,
+    "final_score": 0.6196,
     "passed": false,
     "threshold": 0.7,
     "breakdown": {
-      "avg_per_email": 0.475,
+      "avg_per_email": 0.4696,
       "bonus": 0.15,
       "per_email_scores": [
         {
@@ -112,9 +112,9 @@
           "category": 0.2,
           "action": 0.0,
           "escalation": 0.1,
-          "reply": 0.075,
+          "reply": 0.0375,
           "penalties": 0.0,
-          "total": 0.525
+          "total": 0.4875
         },
         {
           "priority": 0.3,
