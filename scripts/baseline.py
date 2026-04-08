@@ -3,7 +3,7 @@
 import os
 import json
 import httpx
-from groq import Groq
+from openai import OpenAI
 from typing import Dict, Any
 from dotenv import load_dotenv
 
@@ -11,19 +11,19 @@ load_dotenv()
 
 # ─── Config ─────────────────────────────────────────────────
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:7860")
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 TASKS = ["task1_easy", "task2_medium", "task3_hard"]
 
-# ─── Setup Groq ─────────────────────────────────────────────
-groq_client = Groq(api_key=GROQ_API_KEY)
+# ─── Setup OpenAI ─────────────────────────────────────────────
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 # ─── LLM Agent ──────────────────────────────────────────────
 class LLMAgent:
 
     def __init__(self):
-        self.model = "llama-3.1-8b-instant"  # Free Groq model
+        self.model = "gpt-4o-mini"  # Default OpenAI model
 
     def select_action(self, observation: Dict[str, Any]) -> Dict[str, Any]:
         """Use Groq LLaMA to select action."""
@@ -35,7 +35,7 @@ class LLMAgent:
         prompt = self._build_prompt(observation)
 
         try:
-            response = groq_client.chat.completions.create(
+            response = openai_client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {

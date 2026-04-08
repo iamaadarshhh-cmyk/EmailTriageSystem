@@ -121,8 +121,8 @@ server:
 # ─── Baseline ───────────────────────────────────────────────
 baseline:
   script: baseline.py
-  model: llama-3.1-8b-instant
-  provider: groq
+  model: gpt-4o-mini
+  provider: openai
   expected_scores:
     task1_easy: 0.80
     task2_medium: 0.72

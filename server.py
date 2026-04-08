@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
-from env.models import Action, Observation, Email, GroundTruth
+from env.models import Action, Email, GroundTruth
 from tasks.corpus import TASKS
 from grader.grader import EpisodeGrader
 
