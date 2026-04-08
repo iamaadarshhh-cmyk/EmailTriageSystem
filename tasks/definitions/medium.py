@@ -2,8 +2,8 @@
 
 import uuid
 from typing import Optional
-from env.models.state import Email
-from env.models.actions import ActionType
+from env.models import Email
+from env.models import ActionType
 
 
 class MediumTask:

@@ -1,7 +1,7 @@
 # scripts/debug_env.py
 
 from env.core.environment import EmailTriageEnvironment
-from env.models.actions import Action, ActionType
+from env.models import Action, ActionType
 from tasks.task_factory import TaskFactory
 
 

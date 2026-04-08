@@ -1,8 +1,8 @@
 # utils/heuristics.py
 
 from typing import Optional
-from env.models.state import Email
-from env.models.actions import ActionType
+from env.models import Email
+from env.models import ActionType
 from utils.text_processing import extract_keywords, is_spam_like
 
 
