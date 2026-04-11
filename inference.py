@@ -8,7 +8,7 @@ from openai import OpenAI
 load_dotenv()
 
 # ─── Config ─────────────────────────────────────────────────
-API_BASE_URL = os.getenv("API_BASE_URL")  # ❗ NO default
+API_BASE_URL = os.getenv("API_BASE_URL") or "https://adarsh706-email-triage-openenv.hf.space"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 HF_TOKEN = os.getenv("HF_TOKEN")  # REQUIRED
 
