@@ -346,7 +346,7 @@ def _generate_feedback(score: Dict, ground_truth) -> str:
 
 def main():
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
 
 # ─── Run ────────────────────────────────────────────────────
 if __name__ == "__main__":

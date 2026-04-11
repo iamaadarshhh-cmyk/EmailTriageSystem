@@ -7,10 +7,14 @@ name = "email-triage-env"
 version = "1.0.0"
 description = "An OpenEnv-compatible RL environment for email triage"
 requires-python = ">=3.10"
+dependencies = [
+        "openenv-core>=0.2.0"
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
 
 [project.scripts]
+server = "server.app:main"
 run-server = "scripts.run_server:main"
 run-benchmark = "scripts.run_benchmark:main"
