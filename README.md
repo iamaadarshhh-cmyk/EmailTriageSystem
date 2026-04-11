@@ -1,4 +1,15 @@
+---
+title: Email Triage OpenEnv
+emoji: 🚀
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_file: app.py
+pinned: false
+---
+
 # Email Triage RL Environment
+
 
 An **OpenEnv-compatible reinforcement learning environment** where AI agents learn
 to triage an inbox — classifying emails, routing escalations, and avoiding costly mistakes.
