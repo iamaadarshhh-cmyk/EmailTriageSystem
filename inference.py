@@ -1,7 +1,7 @@
 import os
 import json
 import httpx
-from typing import Dict, Any
+from typing import Dict, Any, List
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -12,176 +12,98 @@ API_BASE_URL = os.getenv("API_BASE_URL") or "https://adarsh706-email-triage-open
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 HF_TOKEN = os.getenv("HF_TOKEN")  # REQUIRED
 
+MODEL_NAME = "gpt-4o-mini"
 TASKS = ["task1_easy", "task2_medium", "task3_hard"]
 
-if not API_BASE_URL:
-    print("❌ API_BASE_URL not set")
-    exit(1)
+# ─── Logging (MANDATORY FORMAT) ─────────────────────────────
+def log_start(task: str, env: str, model: str):
+    print(f"[START] task={task} env={env} model={model}", flush=True)
 
-# ─── Setup OpenAI (SAFE) ────────────────────────────────────
+def log_step(step: int, action: str, reward: float, done: bool, error):
+    error_val = error if error else "null"
+    print(
+        f"[STEP] step={step} action={action} reward={reward:.2f} done={str(done).lower()} error={error_val}",
+        flush=True,
+    )
+
+def log_end(success: bool, steps: int, score: float, rewards: List[float]):
+    rewards_str = ",".join(f"{r:.2f}" for r in rewards)
+    print(
+        f"[END] success={str(success).lower()} steps={steps} score={score:.3f} rewards={rewards_str}",
+        flush=True,
+    )
+
+# ─── OpenAI Client (SAFE) ───────────────────────────────────
 try:
     openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 except Exception:
     openai_client = None
 
-
-# ─── LLM Agent ──────────────────────────────────────────────
+# ─── Agent ──────────────────────────────────────────────────
 class LLMAgent:
 
     def __init__(self):
-        self.model = "gpt-4o-mini"
+        self.model = MODEL_NAME
 
     def select_action(self, observation: Dict[str, Any]) -> Dict[str, Any]:
         email = observation.get("current_email")
         if not email:
             return self._fallback_action("no email")
 
-        # 🔥 fallback if no API key
+        # fallback if no API key
         if not OPENAI_API_KEY or openai_client is None:
             return self._rule_based_action(observation)
 
-        prompt = self._build_prompt(observation)
+        prompt = f"""
+        Email:
+        Subject: {email.get('subject','')}
+        Body: {email.get('body','')}
+
+        Choose one action:
+        classify, reply, escalate, archive, delete
+
+        Return JSON with action_type only.
+        """
 
         try:
             response = openai_client.chat.completions.create(
                 model=self.model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert email triage assistant. Always respond with valid JSON only."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt,
-                    }
-                ],
-                max_tokens=400,
+                messages=[{"role": "user", "content": prompt}],
                 temperature=0.1,
+                max_tokens=100,
             )
 
-            content = response.choices[0].message.content
-            return self._parse_response(content)
+            content = response.choices[0].message.content.strip()
+
+            if "escalate" in content:
+                return {"action_type": "escalate"}
+            elif "reply" in content:
+                return {"action_type": "reply"}
+            elif "delete" in content:
+                return {"action_type": "delete"}
+            else:
+                return {"action_type": "archive"}
 
         except Exception as e:
-            print(f"⚠️ LLM error: {e}")
             return self._fallback_action(str(e))
 
-    def _build_prompt(self, observation: Dict) -> str:
-        email = observation["current_email"]
-        history = observation.get("triage_history", [])
-        remaining = observation.get("inbox_remaining", 0)
-
-        return f"""Analyze this email and decide the best action.
-
-EMAIL:
-Subject: {email.get('subject', '')}
-From: {email.get('sender_name', '')} <{email.get('sender', '')}>
-Body: {email.get('body', '')}
-
-INBOX STATUS:
-- Emails remaining: {remaining}
-- Recent actions: {json.dumps(history[-3:], indent=2)}
-
-AVAILABLE ACTIONS:
-- classify
-- reply
-- escalate
-- archive
-- delete
-
-Respond ONLY with JSON:
-{{
-    "action_type": "archive",
-    "triage": {{
-        "priority": "low",
-        "category": "general_inquiry",
-        "confidence": 0.8
-    }},
-    "reason": "Short explanation"
-}}"""
-
-    def _parse_response(self, content: str) -> Dict:
-        try:
-            import re
-
-            content = re.sub(r'```json\s*', '', content)
-            content = re.sub(r'```\s*', '', content)
-
-            json_match = re.search(r'\{.*\}', content, re.DOTALL)
-            if json_match:
-                parsed = json.loads(json_match.group())
-
-                if "action_type" not in parsed:
-                    parsed["action_type"] = "archive"
-
-                if "triage" not in parsed:
-                    parsed["triage"] = {
-                        "priority": "low",
-                        "category": "general_inquiry",
-                        "confidence": 0.5,
-                    }
-
-                return parsed
-
-        except Exception as e:
-            print(f"⚠️ Parse error: {e}")
-
-        return self._fallback_action("parse error")
-
-    # 🔥 Improved rule-based fallback
     def _rule_based_action(self, observation):
         email = observation.get("current_email", {})
-        subject = email.get("subject", "").lower()
-        body = email.get("body", "").lower()
-
-        text = subject + " " + body
+        text = (email.get("subject", "") + " " + email.get("body", "")).lower()
 
         if "urgent" in text or "error" in text:
-            return {
-                "action_type": "escalate",
-                "triage": {
-                    "priority": "urgent",
-                    "category": "bug_report",
-                    "confidence": 0.7,
-                },
-                "reason": "Detected urgency/error keywords",
-            }
+            return {"action_type": "escalate"}
         elif "invoice" in text or "payment" in text:
-            return {
-                "action_type": "reply",
-                "triage": {
-                    "priority": "high",
-                    "category": "billing",
-                    "confidence": 0.7,
-                },
-                "reason": "Billing related content",
-            }
+            return {"action_type": "reply"}
         elif "spam" in text or "offer" in text:
-            return {
-                "action_type": "delete",
-                "triage": {
-                    "priority": "spam",
-                    "category": "spam",
-                    "confidence": 0.8,
-                },
-                "reason": "Spam detected",
-            }
+            return {"action_type": "delete"}
         else:
-            return self._fallback_action("default rule")
+            return {"action_type": "archive"}
 
-    def _fallback_action(self, reason: str) -> Dict:
-        return {
-            "action_type": "archive",
-            "triage": {
-                "priority": "low",
-                "category": "general_inquiry",
-                "confidence": 0.5,
-            },
-            "reason": f"Fallback: {reason}",
-        }
+    def _fallback_action(self, reason):
+        return {"action_type": "archive"}
 
-
-# ─── Environment Client ──────────────────────────────────────
+# ─── Env Client ─────────────────────────────────────────────
 class EnvClient:
 
     def __init__(self, base_url: str):
@@ -189,83 +111,82 @@ class EnvClient:
         self.client = httpx.Client(timeout=30.0)
         self.session_id = None
 
-    def reset(self, task_id: str) -> Dict:
-        response = self.client.post(f"{self.base_url}/reset/{task_id}")
-        response.raise_for_status()
-        data = response.json()
+    def reset(self, task_id: str):
+        r = self.client.post(f"{self.base_url}/reset/{task_id}")
+        r.raise_for_status()
+        data = r.json()
         self.session_id = data["session_id"]
         return data
 
-    def step(self, action: Dict) -> Dict:
-        response = self.client.post(
+    def step(self, action: Dict):
+        r = self.client.post(
             f"{self.base_url}/step",
             params={"session_id": self.session_id},
             json=action,
         )
-        response.raise_for_status()
-        return response.json()
+        r.raise_for_status()
+        return r.json()
 
-    def grade(self) -> Dict:
-        response = self.client.get(
+    def grade(self):
+        r = self.client.get(
             f"{self.base_url}/grade",
             params={"session_id": self.session_id},
         )
-        response.raise_for_status()
-        return response.json()
-
-    def health(self) -> bool:
-        try:
-            r = self.client.get(f"{self.base_url}/health")
-            return r.status_code == 200
-        except Exception:
-            return False
+        r.raise_for_status()
+        return r.json()
 
     def close(self):
         self.client.close()
 
-
-# ─── Run ─────────────────────────────────────────────────────
-def run_baseline(task_id: str):
+# ─── Run ────────────────────────────────────────────────────
+def run_task(task_id: str):
 
     env = EnvClient(API_BASE_URL)
     agent = LLMAgent()
 
-    if not env.health():
-        print("❌ Server not reachable!")
-        return {}
+    rewards = []
+    steps = 0
+    success = False
+
+    log_start(task_id, "email_triage", MODEL_NAME)
 
     try:
         data = env.reset(task_id)
-        observation = data["observation"]
-
+        obs = data["observation"]
         done = False
 
         while not done:
             try:
-                action = agent.select_action(observation)
+                action = agent.select_action(obs)
                 result = env.step(action)
 
-                observation = result["observation"]
-                done = result["done"]
+                reward = result.get("reward", {}).get("immediate", 0.0)
+                done = result.get("done", False)
+
+                rewards.append(reward)
+                steps += 1
+
+                log_step(steps, action["action_type"], reward, done, None)
+
+                obs = result["observation"]
 
             except Exception as e:
-                print(f"⚠️ Step error: {e}")
+                log_step(steps, "error", 0.0, True, str(e))
                 break
 
         try:
             grade = env.grade()
-            print(f"✅ Score: {grade['final_score']} | Passed: {grade['passed']}")
-            return grade
-        except Exception as e:
-            print(f"⚠️ Grading failed: {e}")
-            return {}
+            score = grade.get("final_score", 0.0)
+            success = grade.get("passed", False)
+        except Exception:
+            score = sum(rewards)
+            success = False
 
     finally:
         env.close()
+        log_end(success, steps, score, rewards)
 
-
-# ─── Main ────────────────────────────────────────────────────
+# ─── Main ───────────────────────────────────────────────────
 if __name__ == "__main__":
-    for task_id in TASKS:
-        print(f"\n🚀 Running {task_id}...")
-        run_baseline(task_id)
+    for task in TASKS:
+        run_task(task)
